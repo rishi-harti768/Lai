@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   GitCompareArrows,
   Loader2,
   AlertTriangle,
   ChevronDown,
+  FileText,
 } from 'lucide-react';
 import { getContracts, compareContracts, type CompareResult } from '../lib/api';
 import { cn, getClauseTypeLabel, getRiskBgColor } from '../lib/utils';
+import { Skeleton } from '../components/ui/Skeleton';
+
+const LOADING_MESSAGES = [
+  'Analyzing selected contracts...',
+  'Extracting clause information...',
+  'Comparing clause language...',
+  'Evaluating risk exposure...',
+  'Checking market-standard deviations...',
+  'Generating insights...',
+];
 
 const CLAUSE_TYPES = [
   'indemnity',
@@ -25,6 +36,18 @@ export function ComparePage() {
   const [compareResult, setCompareResult] = useState<CompareResult | null>(null);
   const [isComparing, setIsComparing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isComparing) {
+      setLoadingStep(0);
+      interval = setInterval(() => {
+        setLoadingStep((prev) => (prev < LOADING_MESSAGES.length - 1 ? prev + 1 : prev));
+      }, 1500);
+    }
+    return () => clearInterval(interval);
+  }, [isComparing]);
 
   const { data: contracts = [] } = useQuery({
     queryKey: ['contracts'],
@@ -49,6 +72,7 @@ export function ComparePage() {
       return;
     }
     setError(null);
+    setCompareResult(null); // Clear previous results while loading
     setIsComparing(true);
     try {
       const result = await compareContracts(selectedContracts, selectedClauseType);
@@ -61,7 +85,7 @@ export function ComparePage() {
   };
 
   return (
-    <div className="p-8 animate-fade-in">
+    <div className="p-4 md:p-8 animate-fade-in">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[var(--color-foreground)]">
           Compare Contracts
@@ -78,9 +102,15 @@ export function ComparePage() {
             Select Contracts ({selectedContracts.length}/5)
           </h3>
           {completedContracts.length === 0 ? (
-            <p className="text-sm text-[var(--color-muted-foreground)]">
-              No analyzed contracts available. Upload and analyze contracts first.
-            </p>
+            <div className="flex flex-col items-center justify-center py-10 text-center bg-[var(--color-background)]/50 rounded-lg border border-dashed border-[var(--color-border)] my-2">
+              <div className="w-14 h-14 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center mb-3">
+                <FileText className="h-6 w-6 text-[var(--color-primary)]" />
+              </div>
+              <p className="text-[var(--color-foreground)] font-medium mb-1">No contracts available</p>
+              <p className="text-sm text-[var(--color-muted-foreground)]">
+                You need at least two analyzed contracts to compare.
+              </p>
+            </div>
           ) : (
             <div className="space-y-2">
               {completedContracts.map((contract) => {
@@ -92,16 +122,16 @@ export function ComparePage() {
                     key={contract.id}
                     onClick={() => toggleContract(contract.id)}
                     className={cn(
-                      'w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-all text-left',
+                      'w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 text-left group cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]',
                       isSelected
                         ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5'
                         : 'border-[var(--color-border)] hover:border-[var(--color-muted-foreground)]/30',
                     )}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
                       <div
                         className={cn(
-                          'w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors',
+                          'w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0',
                           isSelected
                             ? 'bg-[var(--color-primary)] border-[var(--color-primary)]'
                             : 'border-[var(--color-border)]',
@@ -120,13 +150,13 @@ export function ComparePage() {
                           </svg>
                         )}
                       </div>
-                      <span className="text-sm font-medium text-[var(--color-foreground)]">
+                      <span className="text-sm font-medium text-[var(--color-foreground)] truncate" title={contract.filename}>
                         {contract.filename}
                       </span>
                     </div>
                     <span
                       className={cn(
-                        'text-xs px-2 py-0.5 rounded-full border font-medium',
+                        'text-xs px-2 py-0.5 rounded-full border font-medium shrink-0',
                         getRiskBgColor(riskLevel),
                       )}
                     >
@@ -165,10 +195,10 @@ export function ComparePage() {
             onClick={handleCompare}
             disabled={selectedContracts.length < 2 || isComparing}
             className={cn(
-              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all',
-              selectedContracts.length >= 2 && !isComparing
-                ? 'bg-[var(--color-primary)] text-white hover:opacity-90'
-                : 'bg-[var(--color-secondary)] text-[var(--color-muted-foreground)] cursor-not-allowed',
+              'w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300 cursor-pointer active:scale-[0.98]',
+              selectedContracts.length < 2 || isComparing
+                ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] cursor-not-allowed'
+                : 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary)]/90 shadow-lg hover:shadow-xl hover:-translate-y-1 shadow-[var(--color-primary)]/20',
             )}
           >
             {isComparing ? (
@@ -193,28 +223,72 @@ export function ComparePage() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {isComparing && (
+        <div className="glass-card rounded-xl p-6 animate-fade-in mb-8">
+          <div className="flex flex-col items-center justify-center py-8">
+            <Loader2 className="h-10 w-10 animate-spin text-indigo-500 mb-6" />
+            <p className="text-xl font-medium text-white tracking-wide">
+              {LOADING_MESSAGES[loadingStep]}
+            </p>
+          </div>
+          
+          <div 
+            className={cn(
+              "grid gap-4 w-full",
+              selectedContracts.length === 2 ? "grid-cols-1 md:grid-cols-2" :
+              selectedContracts.length === 3 ? "grid-cols-1 md:grid-cols-3" :
+              "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            )}
+          >
+            {selectedContracts.map((id) => (
+              <div key={id} className="bg-[var(--color-background)] rounded-lg p-4 border border-[var(--color-border)]">
+                <div className="flex items-center justify-between mb-4">
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-5 w-12 rounded-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-[90%]" />
+                  <Skeleton className="h-3 w-[95%]" />
+                  <Skeleton className="h-3 w-[80%]" />
+                </div>
+                <Skeleton className="h-3 w-2/3 mt-4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Results */}
-      {compareResult && (
+      {!isComparing && compareResult && (
         <div className="glass-card rounded-xl p-6 animate-fade-in">
           <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-4">
             Comparison: {getClauseTypeLabel(compareResult.clause_type)}
           </h2>
 
           {/* Side by side clauses */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div 
+            className={cn(
+              "grid gap-4 mb-6 w-full",
+              compareResult.comparisons.length === 2 ? "grid-cols-1 md:grid-cols-2" :
+              compareResult.comparisons.length === 3 ? "grid-cols-1 md:grid-cols-3" :
+              "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            )}
+          >
             {compareResult.comparisons.map((comp) => (
               <div
                 key={comp.contract_id}
-                className="bg-[var(--color-background)] rounded-lg p-4 border border-[var(--color-border)]"
+                className="bg-[var(--color-background)] rounded-lg p-3 md:p-4 border border-[var(--color-border)] flex flex-col"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-[var(--color-foreground)]">
+                <div className="flex items-start md:items-center justify-between mb-2 md:mb-3 gap-2">
+                  <span className="text-sm font-medium text-[var(--color-foreground)] line-clamp-2 md:truncate" title={comp.contract_name}>
                     {comp.contract_name}
                   </span>
                   {comp.risk_score !== null && (
                     <span
                       className={cn(
-                        'text-xs px-2 py-0.5 rounded-full border font-medium',
+                        'text-[10px] md:text-xs px-2 py-0.5 rounded-full border font-medium shrink-0',
                         getRiskBgColor(
                           comp.risk_score <= 25
                             ? 'low'
@@ -230,7 +304,7 @@ export function ComparePage() {
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-[var(--color-secondary-foreground)] leading-relaxed max-h-48 overflow-y-auto">
+                <p className="text-xs text-[var(--color-secondary-foreground)] leading-relaxed max-h-32 md:max-h-48 overflow-y-auto">
                   {comp.clause_text || 'Clause not found in this contract.'}
                 </p>
                 {comp.deviation && (

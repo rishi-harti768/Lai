@@ -31,13 +31,26 @@ import {
   getDeviationLabel,
   getDeviationColor,
 } from '../lib/utils';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Skeleton } from '../components/ui/Skeleton';
+import { toastSuccess, toastError } from '../components/ui/Toast';
 
 export function ContractPage() {
   const { id } = useParams<{ id: string }>();
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
+  const prevStatusRef = useRef<string | null>(null);
+  const [progressStage, setProgressStage] = useState(0);
 
-  const { data: contract, isLoading } = useQuery({
+  const stages = [
+    "Document uploaded",
+    "Parsing document structure...",
+    "Extracting key provisions...",
+    "Assessing legal and commercial risks...",
+    "Generating executive summary...",
+    "Preparing results..."
+  ];
+
+  const { data: contract, isLoading, isError, refetch } = useQuery({
     queryKey: ['contract', id],
     queryFn: () => getContract(id!),
     enabled: !!id,
@@ -49,23 +62,100 @@ export function ContractPage() {
     },
   });
 
+  useEffect(() => {
+    if (contract) {
+      const currentStatus = contract.status;
+      const prevStatus = prevStatusRef.current;
+      
+      if (prevStatus && prevStatus !== currentStatus) {
+        if (currentStatus === 'complete') {
+          toastSuccess('Analysis complete!');
+        } else if (currentStatus === 'error') {
+          toastError('Analysis failed.');
+        }
+      }
+      prevStatusRef.current = currentStatus;
+    }
+  }, [contract?.status]);
+
+  const isProcessing = contract ? !['complete', 'error'].includes(contract.status) : false;
+
+  useEffect(() => {
+    const stageDurations = [2000, 5000, 8000, 8000, 5000];
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (isProcessing) {
+      const scheduleNext = (current: number) => {
+        if (current < stageDurations.length) {
+          timeoutId = setTimeout(() => {
+            setProgressStage(current + 1);
+            scheduleNext(current + 1);
+          }, stageDurations[current]);
+        }
+      };
+
+      setProgressStage(0);
+      scheduleNext(0);
+    } else {
+      setProgressStage(0);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isProcessing]);
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      <div className="p-4 md:p-8 animate-fade-in">
+        <div className="flex items-center gap-4 mb-8">
+          <Skeleton className="h-9 w-9 rounded-lg" />
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-6 w-6 rounded-md" />
+              <Skeleton className="h-8 w-64" />
+            </div>
+            <Skeleton className="h-4 w-40 mt-2" />
+          </div>
+        </div>
+        <div className="glass-card rounded-xl p-8 mb-8 flex flex-col items-center">
+          <Skeleton className="h-12 w-12 rounded-full mb-4" />
+          <Skeleton className="h-6 w-48 mb-2" />
+          <Skeleton className="h-4 w-64 mb-4" />
+          <Skeleton className="h-1.5 w-64 rounded-full" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="glass-card rounded-xl p-6 h-48"><Skeleton className="h-full w-full" /></div>
+          <div className="glass-card rounded-xl p-6 h-48"><Skeleton className="h-full w-full" /></div>
+          <div className="glass-card rounded-xl p-6 h-48"><Skeleton className="h-full w-full" /></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full py-20 text-[var(--color-muted-foreground)]">
+        <AlertTriangle className="h-12 w-12 mb-4 text-red-500 opacity-80" />
+        <p className="text-lg font-medium mb-2 text-red-400">Failed to load contract</p>
+        <p className="text-sm mb-6">There was a problem communicating with the server.</p>
+        <button
+          onClick={() => refetch()}
+          className="px-4 py-2 rounded-lg bg-[var(--color-primary)] text-white text-sm font-medium hover:opacity-90 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95"
+        >
+          Retry
+        </button>
       </div>
     );
   }
 
   if (!contract) {
     return (
-      <div className="p-8 text-center text-[var(--color-muted-foreground)]">
+      <div className="p-4 md:p-8 text-center text-[var(--color-muted-foreground)]">
         Contract not found.
       </div>
     );
   }
-
-  const isProcessing = !['complete', 'error'].includes(contract.status);
   const summary = contract.executive_summary
     ? (() => {
         try {
@@ -86,30 +176,32 @@ export function ContractPage() {
     : [];
 
   return (
-    <div className="p-8 animate-fade-in">
+    <div className="p-4 md:p-8 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link
-          to="/"
-          className="p-2 rounded-lg hover:bg-[var(--color-secondary)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <div className="flex-1">
-          <div className="flex items-center gap-3">
-            <FileText className="h-6 w-6 text-[var(--color-primary)]" />
-            <h1 className="text-2xl font-bold text-[var(--color-foreground)]">
-              {contract.filename}
-            </h1>
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
+        <div className="flex items-start gap-4 flex-1 min-w-0">
+          <Link
+            to="/"
+            className="p-2 rounded-lg hover:bg-[var(--color-secondary)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors shrink-0"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <FileText className="h-6 w-6 text-[var(--color-primary)] shrink-0" />
+              <h1 className="text-xl md:text-2xl font-bold text-[var(--color-foreground)] truncate" title={contract.filename}>
+                {contract.filename}
+              </h1>
+            </div>
+            <p className="text-sm text-[var(--color-muted-foreground)] mt-1 truncate">
+              Uploaded {formatDate(contract.created_at)}
+            </p>
           </div>
-          <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            Uploaded {formatDate(contract.created_at)}
-          </p>
         </div>
         {contract.status === 'complete' && (
           <Link
             to={`/contracts/${id}/chat`}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-secondary)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-accent)] transition-colors"
+            className="flex items-center justify-center md:justify-start gap-2 px-4 py-2 rounded-lg bg-[var(--color-secondary)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-accent)] transition-colors w-full md:w-auto shrink-0"
           >
             <MessageSquare className="h-4 w-4" />
             Ask Questions
@@ -119,33 +211,60 @@ export function ContractPage() {
 
       {/* Processing State */}
       {isProcessing && (
-        <div className="glass-card rounded-xl p-8 text-center mb-8">
-          <Loader2 className="h-12 w-12 animate-spin text-[var(--color-primary)] mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-[var(--color-foreground)] mb-2">
-            Analyzing Contract...
-          </h2>
-          <p className="text-[var(--color-muted-foreground)]">
-            {contract.status === 'parsing' && 'Parsing document structure...'}
-            {contract.status === 'analyzing' && 'Extracting clauses and scoring risks...'}
-            {contract.status === 'uploaded' && 'Waiting to start analysis...'}
-            {contract.status === 'parsed' && 'Document parsed, starting analysis...'}
-          </p>
-          <div className="mt-4 w-64 mx-auto h-1.5 bg-[var(--color-secondary)] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[var(--color-primary)] rounded-full transition-all duration-1000"
-              style={{
-                width:
-                  contract.status === 'parsing'
-                    ? '25%'
-                    : contract.status === 'parsed'
-                      ? '40%'
-                      : contract.status === 'analyzing'
-                        ? '70%'
-                        : '10%',
-              }}
-            />
+        <div className="min-h-[50vh] flex flex-col justify-center">
+          <div className="glass-card rounded-xl p-6 md:p-10 max-w-2xl mx-auto mb-12 shadow-lg border-[var(--color-border)]">
+            <div className="flex flex-col items-center mb-6 md:mb-8">
+              <div className="relative">
+                <Loader2 className="h-12 w-12 md:h-16 md:w-16 animate-spin text-[var(--color-primary)] mb-4 md:mb-6" />
+                <div className="absolute inset-0 flex items-center justify-center mb-4 md:mb-6">
+                  <FileText className="h-5 w-5 md:h-6 md:w-6 text-[var(--color-primary)] opacity-80" />
+                </div>
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-[var(--color-foreground)] mb-2 md:mb-3 bg-gradient-to-r from-[var(--color-primary)] to-blue-500 bg-clip-text text-transparent text-center">
+                Analyzing Contract
+              </h2>
+              <p className="text-[var(--color-muted-foreground)] text-sm md:text-base text-center max-w-md">
+                Our AI is reviewing your document. This usually takes about 15-20 seconds.
+              </p>
+            </div>
+            
+            <div className="space-y-1 px-2 md:px-12">
+              {stages.map((stage, index) => {
+                const isCompleted = index < progressStage;
+                const isCurrent = index === progressStage;
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={cn(
+                      "flex items-center gap-3 md:gap-4 py-1.5 px-2 md:px-3 rounded-lg transition-all duration-500",
+                      isCurrent ? "bg-[var(--color-secondary)]/50 scale-105 shadow-sm" : "",
+                      isCompleted ? "opacity-100" : isCurrent ? "opacity-100" : "opacity-40"
+                    )}
+                  >
+                    <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-4 w-4 md:h-6 md:w-6 text-green-500 animate-in zoom-in duration-300" />
+                      ) : isCurrent ? (
+                        <Loader2 className="h-3.5 w-3.5 md:h-5 md:w-5 text-[var(--color-primary)] animate-spin" />
+                      ) : (
+                        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--color-muted-foreground)]/30" />
+                      )}
+                    </div>
+                    <span className={cn(
+                      "text-xs md:text-sm font-medium transition-colors duration-300",
+                      isCurrent ? "text-[var(--color-foreground)]" : "text-[var(--color-muted-foreground)]"
+                    )}>
+                      {stage}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+
+
       )}
 
       {/* Error State */}
@@ -192,7 +311,7 @@ export function ContractPage() {
                     strokeWidth="8"
                     strokeLinecap="round"
                     strokeDasharray={`${((contract.overall_risk_score || 0) / 100) * 327} 327`}
-                    className="transition-all duration-1000"
+                    className="transition-all duration-1000 animate-gauge"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -334,10 +453,11 @@ export function ContractPage() {
             <div className="divide-y divide-[var(--color-border)]">
               {contract.clauses
                 .sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0))
-                .map((clause) => (
+                .map((clause, index) => (
                   <ClauseCard
                     key={clause.id}
                     clause={clause}
+                    index={index}
                     isExpanded={expandedClause === clause.id}
                     onToggle={() =>
                       setExpandedClause(
@@ -356,18 +476,23 @@ export function ContractPage() {
 
 function ClauseCard({
   clause,
+  index = 0,
   isExpanded,
   onToggle,
 }: {
   clause: Clause;
+  index?: number;
   isExpanded: boolean;
   onToggle: () => void;
 }) {
   return (
-    <div className="group">
+    <div 
+      className="group animate-staggered"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
       <button
         onClick={onToggle}
-        className="w-full px-6 py-4 flex items-center gap-4 hover:bg-[var(--color-secondary)]/30 transition-colors text-left"
+        className="w-full px-6 py-4 flex items-center gap-4 hover:bg-[var(--color-secondary)]/30 transition-all duration-200 text-left cursor-pointer hover:pl-7 active:scale-[0.99]"
       >
         {/* Risk indicator */}
         <div
@@ -377,18 +502,18 @@ function ClauseCard({
 
         {/* Main info */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-[var(--color-foreground)]">
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+            <span className="text-sm font-medium text-[var(--color-foreground)] line-clamp-2 break-words [overflow-wrap:anywhere]" title={clause.title || getClauseTypeLabel(clause.clause_type)}>
               {clause.title || getClauseTypeLabel(clause.clause_type)}
             </span>
             {clause.section_number && (
-              <span className="text-xs text-[var(--color-muted-foreground)]">
+              <span className="text-xs text-[var(--color-muted-foreground)] shrink-0 mt-0.5 md:mt-0">
                 Section {clause.section_number}
               </span>
             )}
           </div>
           {clause.plain_english_summary && (
-            <p className="text-xs text-[var(--color-muted-foreground)] mt-1 truncate">
+            <p className="text-xs text-[var(--color-muted-foreground)] mt-1 line-clamp-1 md:truncate">
               {clause.plain_english_summary}
             </p>
           )}
@@ -423,10 +548,16 @@ function ClauseCard({
       </button>
 
       {/* Expanded content */}
-      {isExpanded && (
-        <div className="px-6 pb-6 pl-12 animate-fade-in">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Original Text */}
+      <div 
+        className={cn(
+          "grid transition-all duration-300 ease-in-out",
+          isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="px-6 pb-6 pl-12 pt-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Original Text */}
             <div className="bg-[var(--color-background)] rounded-lg p-4">
               <p className="text-xs font-semibold text-[var(--color-muted-foreground)] uppercase tracking-wider mb-2">
                 Original Text
@@ -486,7 +617,8 @@ function ClauseCard({
             </div>
           </div>
         </div>
-      )}
+      </div>
+    </div>
     </div>
   );
 }
