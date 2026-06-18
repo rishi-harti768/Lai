@@ -1,0 +1,427 @@
+{
+	"info": {
+		"_postman_id": "9369d76c-30c2-409c-9f68-7c87042cb36a",
+		"name": "Legal Document Intelligence System (LAI)",
+		"description": "API collection for testing and interacting with the LAI (Legal Document Intelligence System) backend endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Check API Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contracts",
+			"item": [
+				{
+					"name": "Upload Contract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contracts/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								"upload"
+							]
+						},
+						"description": "Upload a PDF or DOCX contract file for parsing and storage. Returns the uploaded contract metadata."
+					},
+					"response": []
+				},
+				{
+					"name": "List All Contracts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts"
+							]
+						},
+						"description": "Retrieve list of all uploaded and analyzed contracts in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contract Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a",
+									"description": "UUID of the contract"
+								}
+							]
+						},
+						"description": "Fetch detailed information of a contract including executive summary and all extracted clauses."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contract",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Delete a contract record from the DB and remove its associated file from local storage."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AI Pipeline",
+			"item": [
+				{
+					"name": "Trigger AI Analysis",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/analyze",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"analyze"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Launches the asynchronous AI pipeline to parse, extract, score, and summarize the contract."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Analysis Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Polls the current status and progress decimal of the analysis background task."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contract Clauses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/clauses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"clauses"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Returns the array of all clauses extracted from the contract."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Executive Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"summary"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Fetch the AI-generated plain-English executive summary."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Risk Breakdown",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/risks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"risks"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Get score rankings categorized by legal, financial, operational, and reputational risk grids."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comparative & Interactive",
+			"item": [
+				{
+					"name": "Compare Clauses Side-by-Side",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"contract_ids\": [\n    \"7f805a41-3b7c-4734-91c6-cf881335cb8a\",\n    \"de9e144a-a48e-4a6c-9418-4f27df7a3641\"\n  ],\n  \"clause_type\": \"liability\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/compare",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"compare"
+							]
+						},
+						"description": "Takes multiple contract IDs and compares a target clause type (e.g. indemnity, liability) across them."
+					},
+					"response": []
+				},
+				{
+					"name": "Chat with Contract",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"What is the governing law of this contract?\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contracts/:contract_id/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":contract_id",
+								"chat"
+							],
+							"variable": [
+								{
+									"key": "contract_id",
+									"value": "7f805a41-3b7c-4734-91c6-cf881335cb8a"
+								}
+							]
+						},
+						"description": "Converse with Gemini about a contract's content with exact source clause citations."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Baselines",
+			"item": [
+				{
+					"name": "Seed Baselines",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/baselines/seed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"baselines",
+								"seed"
+							]
+						},
+						"description": "Seeds default baselines for NDA, SaaS, and Employment contracts into the database."
+					},
+					"response": []
+				},
+				{
+					"name": "List All Grouped Baselines",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/baselines",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"baselines"
+							]
+						},
+						"description": "Fetches standard baseline standard texts grouped by contract types."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baselines by Contract Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/baselines/:contract_type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"baselines",
+								":contract_type"
+							],
+							"variable": [
+								{
+									"key": "contract_type",
+									"value": "saas",
+									"description": "Contract category: nda, saas, employment, services"
+								}
+							]
+						},
+						"description": "Lists standard baselines available for a single contract category."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
