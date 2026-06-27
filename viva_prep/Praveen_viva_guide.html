@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAI - Praveen's Viva Guide (Person 1)</title>
+<style>
+  :root{
+    /* light pastel theme */
+    --bg:#f6f7fb; --panel:#ffffff; --panel2:#eef1f9; --ink:#222838; --muted:#6b7488;
+    --line:#e2e7f2; --accent:#5468d4;
+    --mine:#0f9d76; --mine-bg:#e7f7f1; --mine-line:#9fe0cb;
+    --others:#8b5cf6; --others-bg:#f1ebfe;
+    --gold:#c98a12; --gold-bg:#fdf3dc; --gold-line:#f3d489;
+    --info:#2a7fc4; --info-bg:#e6f1fb; --info-line:#aacdee;
+    --warn:#d6436a; --warn-bg:#fde9ef; --warn-line:#f3b3c6;
+    --code:#f2f4fa; --code-ink:#3a4a72;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 22px 90px}
+  h1{font-size:30px;margin:0 0 6px;line-height:1.2;color:#1b2030}
+  h2{font-size:23px;margin:46px 0 14px;padding-bottom:9px;border-bottom:2px solid var(--line);color:#1b2030}
+  h3{font-size:18px;margin:26px 0 8px;color:var(--accent)}
+  p,li{color:var(--ink)}
+  .sub{color:var(--muted);margin:0 0 22px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-family:Consolas,Menlo,monospace;font-size:14px;color:var(--code-ink)}
+  pre{background:var(--code);padding:14px 16px;border-radius:10px;overflow-x:auto;border:1px solid var(--line)}
+  pre code{background:none;padding:0;color:var(--code-ink)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0;box-shadow:0 1px 3px rgba(40,52,90,.05)}
+  .grid{display:grid;gap:14px}
+  @media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr}}
+  .callout{border-radius:10px;padding:14px 16px;margin:14px 0;border-left:5px solid}
+  .info{background:var(--info-bg);border-color:var(--info)}
+  .key{background:var(--gold-bg);border-color:var(--gold)}
+  .warn{background:var(--warn-bg);border-color:var(--warn)}
+  .mine{background:var(--mine-bg);border-color:var(--mine)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px;margin-right:6px;vertical-align:middle}
+  .t-mine{background:var(--mine);color:#fff}
+  .t-other{background:var(--others);color:#fff}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px;background:var(--panel);border-radius:10px;overflow:hidden}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:#2a3247}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:4px 16px;box-shadow:0 1px 3px rgba(40,52,90,.04)}
+  details[open]{background:#fbfcfe}
+  summary{cursor:pointer;font-weight:650;padding:10px 0;color:#1b2030}
+  summary::marker{color:var(--accent)}
+  .q{color:var(--gold);font-weight:700}
+  .toc{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px 22px;columns:2;column-gap:30px}
+  .toc a{display:block;padding:3px 0}
+  .pill{font-size:12px;color:var(--muted)}
+  .flow div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 13px;margin:7px 0;font-size:14.5px}
+  .flow .you{border-color:var(--mine-line);background:var(--mine-bg)}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+  .step .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+  ul{padding-left:20px}
+  .big{font-size:18px}
+  hr{border:none;border-top:1px solid var(--line);margin:32px 0}
+  .badge{display:inline-block;background:var(--mine);color:#fff;font-size:12.5px;font-weight:700;padding:3px 12px;border-radius:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>LAI - Your Viva Survival Guide</h1>
+<p class="sub">Legal Document Intelligence System &middot; written for <b>Praveen</b> &middot; you are <span class="badge">Person 1 - Introduction + Overall Flow</span> &middot; the easiest, lowest-risk slot. Read top to bottom; the most important things are first.</p>
+
+<div class="callout key">
+  <b>The one sentence to memorise:</b> "LAI is an AI system that reads a PDF or DOCX contract, uses IBM Docling to parse its structure, Gemini Flash to extract the key legal clauses, a hybrid of rules plus Gemini to score each clause for risk, and then writes a plain-English executive summary - turning an unstructured legal document into structured, interactive legal insights."
+</div>
+
+<div class="callout mine">
+  <b>Your job in one line:</b> You open the viva. You explain <b>what the project is</b> and <b>how a contract flows through the system end to end</b>, then hand off to Person 2. You do <b>not</b> have to defend deep technical choices - those belong to Persons 2 to 5. There are <b>no listed counter-questions</b> for your section. Nail Sections 0, 3, and 4 below and you are done.
+</div>
+
+<div class="toc">
+  <span class="pill">CONTENTS</span>
+  <a href="#s0">0. The 60-second opener (say this first)</a>
+  <a href="#s1">1. Remember only 5 things (the pipeline)</a>
+  <a href="#s2">2. The whole system, plainly</a>
+  <a href="#s3">3. YOUR script, word for word</a>
+  <a href="#s4">4. How a contract flows end to end</a>
+  <a href="#s5">5. What your teammates explain</a>
+  <a href="#s6">6. The 5 questions everyone must know</a>
+  <a href="#s7">7. Tricky questions + safe answers</a>
+  <a href="#s8">8. Plain-English glossary</a>
+  <a href="#s9">9. Live demo + if you get stuck</a>
+</div>
+
+<h2 id="s0">0. The 60-second opener (what to say first)</h2>
+<div class="card">
+<p class="big">If the examiner says "tell me about your project," say this:</p>
+<p>"Our project is <b>LAI - a Legal Document Intelligence System</b>. The goal is to <b>automate contract review using Generative AI</b>.</p>
+<p>Reviewing contracts by hand is slow and expensive - a legal team has to find the risky clauses, compare them to market standards, write a summary, and answer questions about the document. We built a system that does this end to end.</p>
+<p>The user uploads a PDF or DOCX contract. It reaches our <b>FastAPI backend</b>, which creates a contract record in <b>PostgreSQL</b> and kicks off a background pipeline with five stages: <b>document parsing, clause extraction, risk scoring, executive summary, and database storage</b>. Once that finishes, the frontend lets the user read the summary, inspect each clause's risk, compare contracts side by side, and chat with the contract.</p>
+<p>So in short, we turn an unstructured legal document into <b>structured legal insights</b> that anyone can understand and interact with."</p>
+</div>
+<div class="callout info">That paragraph alone covers most of what an examiner wants from the opening. Practice it out loud 3 times. Everything else in this guide is backup.</div>
+
+<h2 id="s1">1. If you remember only 5 things (the pipeline)</h2>
+<p>Your whole section is the <b>5-stage pipeline</b>. Memorise these in order - they are the backbone of every answer you give.</p>
+<div class="grid two">
+  <div class="callout info"><b>1. Parse.</b> <b>IBM Docling</b> reads the PDF/DOCX and keeps its <b>structure</b> - headings, section numbers, tables - not just plain text.</div>
+  <div class="callout info"><b>2. Extract.</b> <b>Gemini Flash</b> reads the parsed document and pulls out the named <b>clauses</b> (indemnity, liability, termination, etc.) as clean <b>JSON</b>.</div>
+  <div class="callout info"><b>3. Score.</b> Each clause gets a <b>risk score</b> from a <b>hybrid</b> of regex rules + Gemini, compared against a market-standard baseline.</div>
+  <div class="callout info"><b>4. Summarise.</b> Gemini writes a one-page <b>plain-English executive summary</b> of the whole contract.</div>
+  <div class="callout info"><b>5. Store.</b> Everything is saved in <b>PostgreSQL</b> so the frontend can show it instantly and re-use it later.</div>
+</div>
+<div class="callout mine"><b>If you only practise one thing, practise saying these 5 stages smoothly.</b> "Parse, extract, score, summarise, store." That is the heart of Person 1.</div>
+
+<h2 id="s2">2. The whole system, in plain English</h2>
+<p>Think of LAI as a request that travels from the browser, through the backend pipeline, into the database, and back to the screen.</p>
+<div class="card flow">
+  <div>User uploads a <b>PDF or DOCX</b> contract in the browser (React + Vite frontend)</div>
+  <div><b>FastAPI backend</b> saves the file, creates a <code>Contract</code> row in PostgreSQL with status <code>uploaded</code></div>
+  <div>A <b>background pipeline</b> starts so the upload returns instantly (no waiting, no timeout)</div>
+  <div class="you"><b>Stage 1 - Docling</b> parses the file into text + markdown + structured JSON</div>
+  <div class="you"><b>Stage 2 - Gemini</b> extracts the named clauses as JSON</div>
+  <div class="you"><b>Stage 3 - Hybrid scorer</b> rates each clause's risk (rules + Gemini)</div>
+  <div class="you"><b>Stage 4 - Gemini</b> writes the plain-English executive summary</div>
+  <div class="you"><b>Stage 5</b> - all results saved to PostgreSQL; status becomes <code>complete</code></div>
+  <div>Frontend shows the <b>summary, clause risks, compare view, and contract chat</b></div>
+</div>
+<div class="callout mine"><span class="tag t-mine">YOUR PART</span> You own the <b>overall flow</b> - the middle 5 stages above. You do not need to defend <i>how</i> each stage works internally; that is Persons 2 to 5. You just narrate the journey. That makes you the person who "sees the whole picture," which is exactly what an opener should do.</div>
+
+<h2 id="s3">3. Your script, word for word</h2>
+<p>This is the polished version of the official Person 1 script. Say it in your own words, but hit every bold phrase.</p>
+
+<h3>3.1 What the project is (the problem)</h3>
+<div class="card">
+<p>"Our project is <b>LAI, a Legal Document Intelligence System</b>. The objective is to <b>automate contract review using Generative AI</b>.</p>
+<p>Organisations spend a huge amount of time reviewing contracts manually. Legal teams have to <b>identify risky clauses, compare them against market standards, prepare executive summaries, and answer questions</b> about the contract. This is slow, expensive, and needs legal expertise. We built an AI system that handles this end to end."</p>
+</div>
+
+<h3>3.2 What happens when you upload (the flow)</h3>
+<div class="card">
+<p>"The user uploads a <b>PDF or DOCX</b> contract through the frontend. The request reaches our <b>FastAPI backend</b>, where a contract record is first created in <b>PostgreSQL</b> with the status set to <code>uploaded</code>. After that, a <b>background processing pipeline</b> starts."</p>
+<div class="step"><div class="n">1</div><div><b>Document Parsing</b> - the file is converted into structured text.</div></div>
+<div class="step"><div class="n">2</div><div><b>Clause Extraction</b> - the important legal clauses are pulled out.</div></div>
+<div class="step"><div class="n">3</div><div><b>Risk Scoring</b> - each clause is scored for risk.</div></div>
+<div class="step"><div class="n">4</div><div><b>Executive Summary Generation</b> - a one-page plain-English summary is written.</div></div>
+<div class="step"><div class="n">5</div><div><b>Database Storage</b> - all results are saved.</div></div>
+</div>
+
+<h3>3.3 What the user can do next (the features) + handover</h3>
+<div class="card">
+<p>"Once analysis is complete, the frontend gives several features - <b>viewing the executive summary, checking individual clause risks, comparing contracts</b>, and <b>chatting with the contract</b>.</p>
+<p>So overall, our system converts an <b>unstructured legal document into structured legal insights</b> that are easy to understand and interact with."</p>
+<p class="pill" style="margin-top:10px"><b>Your handover line:</b> "I'll now hand over to <b>[Person 2]</b>, who will explain how we convert the uploaded document into structured legal data - the parsing and clause extraction stage."</p>
+</div>
+
+<h2 id="s4">4. How a contract flows end to end (your strongest answer)</h2>
+<p>If the examiner says "walk me through what happens when I upload a contract," narrate this. If you can say it smoothly, you have basically passed.</p>
+<div class="card">
+<div class="step"><div class="n">1</div><div>I upload <code>contract.pdf</code>. The frontend sends it to the backend, which <b>saves the file</b> and creates a <code>Contract</code> row in PostgreSQL with status <code>uploaded</code>.</div></div>
+<div class="step"><div class="n">2</div><div>The backend starts a <b>background task</b> and immediately returns, so the browser never hangs - even a 100-page contract uploads instantly. The status moves <code>parsing</code> &rarr; <code>analyzing</code> &rarr; <code>complete</code>, and the frontend polls it.</div></div>
+<div class="step"><div class="n">3</div><div><b>Docling parses</b> the file into raw text, markdown, and a structured JSON tree - keeping section numbers and headings, which matters because clauses reference each other.</div></div>
+<div class="step"><div class="n">4</div><div>The markdown goes to <b>Gemini Flash</b>, which returns the named clauses as <b>structured JSON</b> - indemnity, limitation of liability, confidentiality, termination, IP, payment terms, governing law.</div></div>
+<div class="step"><div class="n">5</div><div>Each clause is <b>scored</b>: regex rules catch obvious red flags, Gemini compares it to a market-standard baseline, and we blend them <b>40% rules + 60% Gemini</b>. We also compute one <b>overall contract risk score</b>.</div></div>
+<div class="step"><div class="n">6</div><div>Gemini writes the <b>executive summary</b>; everything is <b>saved to PostgreSQL</b>; status becomes <code>complete</code>; the frontend renders the summary, clause cards, compare view, and chat.</div></div>
+</div>
+<div class="callout info">Notice steps 2 and 3 quietly answer two favourite examiner questions: <b>"how do you handle a huge contract without timing out?"</b> (background task) and <b>"why keep document structure?"</b> (cross-references between clauses). Drop those phrases in and you look prepared.</div>
+
+<h2 id="s5">5. What your teammates explain (so you're never blank)</h2>
+<p>You won't be drilled on these, but if a question drifts to a teammate's area, give the one-paragraph version and pass it over.</p>
+
+<div class="card">
+<h3><span class="tag t-other">Person 2</span> Document Parsing + Clause Extraction</h3>
+<p><b>Docling</b> parses the file while preserving structure (headings, tables, section numbers), then <b>Gemini Flash with structured JSON output</b> extracts the named clauses. We use an LLM instead of regex because clauses can be worded in countless ways, and structured JSON because it stores and renders predictably. <i>If asked:</i> "Docling keeps the document hierarchy; Gemini understands the legal meaning, not just patterns."</p>
+</div>
+<div class="card">
+<h3><span class="tag t-other">Person 3</span> Hybrid Risk Scoring + Executive Summary</h3>
+<p>Two parts: a <b>deterministic rule engine</b> (regex for things like "unlimited liability," "sole discretion," "automatic renewal") and <b>Gemini</b>, which compares each clause to a market-standard baseline and returns a risk score, explanation, and plain-English summary. Final score = <b>40% rules + 60% Gemini</b>. Then Gemini writes a one-page executive summary. <i>If asked:</i> "Rules give deterministic detection; Gemini gives contextual understanding - neither alone is enough."</p>
+</div>
+<div class="card">
+<h3><span class="tag t-other">Person 4</span> Database + Features</h3>
+<p>Three PostgreSQL tables: <b>Contract</b> (metadata, raw text, overall risk, summary, status), <b>Clause</b> (every extracted clause stored separately with its type, risk, deviation, and plain-English summary), and <b>Baseline</b> (market-standard templates). Features built on top: executive summary page, compare contracts, and contract chat (which uses <b>long-context prompting</b> - full contract + clause metadata + last 5 messages sent to Gemini). <i>If asked:</i> "Storing clauses separately avoids re-extracting and enables clause-level comparison."</p>
+</div>
+<div class="card">
+<h3><span class="tag t-other">Person 5</span> Design Decisions + Tradeoffs + Future</h3>
+<p>Justifies the choices: Docling for structure, structured JSON for reliability, hybrid scoring for balance, baselines in PostgreSQL, and <b>long-context prompting instead of RAG</b> because we analyse a single contract and full context preserves cross-clause relationships. Known limits: no RAG, no vector DB, no persistent chat memory, higher token cost. Future: RAG over a benchmark corpus like <b>CUAD</b>, a vector database, cross-contract search, and agentic workflows. <i>If asked:</i> "We chose simplicity that fits a single-contract use case, with a clear upgrade path."</p>
+</div>
+
+<h2 id="s6">6. The 5 questions everyone must know</h2>
+<p>The team agreed everyone memorises these five, even with the viva split. Learn them cold.</p>
+<table>
+<tr><th>Question</th><th>One-line answer</th></tr>
+<tr><td><b>Why Docling?</b></td><td>It preserves headings, tables, lists, and section hierarchy - far better than a plain text parser, and structure matters for legal cross-references.</td></tr>
+<tr><td><b>Why hybrid scoring?</b></td><td>Rules give deterministic detection of obvious risks; Gemini understands legal semantics. Together they are reliable and nuanced.</td></tr>
+<tr><td><b>Why long context instead of RAG?</b></td><td>We analyse a single contract, and the full document fits in Gemini's large context window. Sending everything preserves cross-clause relationships. RAG helps more with large document collections.</td></tr>
+<tr><td><b>Why PostgreSQL?</b></td><td>Contracts, clauses, and baselines have clean relational links, and structured storage makes querying and comparison efficient.</td></tr>
+<tr><td><b>Biggest future improvement?</b></td><td>Replace hand-written baselines with RAG over a benchmark corpus like CUAD for market comparison, then add vector search and agentic workflows.</td></tr>
+</table>
+
+<h2 id="s7">7. Tricky questions + safe answers</h2>
+<p>These can come up - including the ones your own teammates raised. Click to expand. Answer calmly in your own words.</p>
+
+<details><summary><span class="q">Q.</span> What is your project in one line?</summary>
+<p>An AI system that reads a contract, extracts its key clauses, scores each one for risk against market standards, and produces a plain-English summary - so non-lawyers can understand a contract quickly.</p></details>
+
+<details><summary><span class="q">Q.</span> Walk me through what happens when I upload a contract.</summary>
+<p>Narrate Section 4: save file and create a record, start a background pipeline (parse, extract, score, summarise, store), then the frontend shows summary, clause risks, comparison, and chat.</p></details>
+
+<details><summary><span class="q">Q.</span> Why didn't you use a graph database for the cross-references?</summary>
+<p>"We don't need one. The whole contract fits inside Gemini's context window, so the model already sees every section and resolves cross-references like 'as defined in Section 5.1' natively. A graph database adds complexity that only pays off across thousands of interconnected documents, which isn't our use case."</p></details>
+
+<details><summary><span class="q">Q.</span> Why not use RAG for chat or comparison?</summary>
+<p>"RAG is for finding relevant text when you don't know where it is in a large collection. We analyse one contract and our clauses are already extracted and classified, so we send the full context directly. That avoids chunking errors and keeps cross-clause relationships intact. RAG is on our future roadmap for comparing against a large market corpus like CUAD."</p></details>
+
+<details><summary><span class="q">Q.</span> Which Gemini model, and why Gemini at all?</summary>
+<p>Say "<b>Gemini Flash</b>" - it's fast, cheap, has a very large context window so a whole contract fits in one prompt, and supports structured JSON output. <span class="pill">(In the code the setting is <code>gemini-3.5-flash</code>, the stable Flash release; if anyone presses on the version, just say "the Flash tier" - the exact version number doesn't change the design.)</span></p></details>
+
+<details><summary><span class="q">Q.</span> Why not a legal-specific model like Legal-BERT or SaulLM?</summary>
+<p>"A general model with a large context window plus structured output covered all our tasks - extraction, scoring, summary, and chat - without the cost and complexity of hosting a specialised model. A legal model is a possible future optimisation, not a requirement for this scope."</p></details>
+
+<details><summary><span class="q">Q.</span> How do you handle a 100-page contract without timing out?</summary>
+<p>"The upload kicks off a background task and returns immediately, so the browser never blocks. The frontend polls the status. And because Gemini's context window is large, we don't have to chunk the document - it's processed in one pass."</p></details>
+
+<details><summary><span class="q">Q.</span> What does "structured output" mean?</summary>
+<p>"Instead of free-form text, we make Gemini return JSON that follows a fixed schema - for example each clause as <code>{type, text, risk_score, summary}</code>. That makes the output predictable, easy to store in the database, and easy to render in the UI."</p></details>
+
+<details><summary><span class="q">Q.</span> How is the risk score actually calculated?</summary>
+<p>"Each clause starts neutral. Regex rules add or subtract points for known patterns - uncapped liability raises it, a liability cap or mutual wording lowers it. Gemini independently scores it 0 to 100 against a baseline. We blend them 40% rules and 60% Gemini, then map the number to low, medium, high, or critical."</p></details>
+
+<details><summary><span class="q">Q.</span> Which clause types do you extract?</summary>
+<p>Indemnity, limitation of liability, confidentiality, termination, intellectual property, payment terms, and governing law.</p></details>
+
+<details><summary><span class="q">Q.</span> Is it deployed? Can you show it live?</summary>
+<p>"We demo it locally - PostgreSQL in Docker, the FastAPI backend, and the React frontend. A live deployment is straightforward (frontend on Vercel, backend plus database on a host like Railway) but for the viva a local run is the most reliable way to show the full pipeline working."</p></details>
+
+<details><summary><span class="q">Q.</span> What are the limitations?</summary>
+<p>"No RAG, no vector database, and no persistent chat memory yet, and long-context prompting costs more tokens. These are deliberate simplifications for a single-contract use case, with a clear upgrade path to RAG, vector search, and agents."</p></details>
+
+<h3>7b. The "what if it were X instead of Y" pushbacks</h3>
+<div class="callout key"><b>The tactic:</b> the examiner agrees with your reason, then changes the scenario to see if you understand <i>when your choice stops being right</i>. The winning move is to <b>name the boundary and concede it cleanly</b> - "yes, in that case the other option wins, and that's exactly why it's on our roadmap." That shows judgement, not stubbornness. Never defend a choice past the point where it's actually correct.</div>
+
+<details><summary><span class="q">Q.</span> You skipped RAG because it's a single contract. What if a user uploads 500 contracts and asks a question across all of them?</summary>
+<p>"Then RAG is the right tool, and that's precisely our future plan. Long-context works because <i>one</i> contract fits in the window; a whole corpus does not. At that scale we'd add embeddings, a vector database, and retrieval. The decision was scoped to our current single-contract use case, not a permanent rejection of RAG."</p></details>
+
+<details><summary><span class="q">Q.</span> What if the contract were so large it didn't fit in the context window?</summary>
+<p>"Then we'd have to chunk it and retrieve the relevant parts - essentially RAG - or summarise section by section first. For normal contracts that fit in Gemini's window, sending it whole is simpler and loses no cross-references. Our choice is tied to that 'it fits' condition."</p></details>
+
+<details><summary><span class="q">Q.</span> What if Gemini's context window were small, like 8K tokens - would you still avoid RAG?</summary>
+<p>"No. The whole justification for long-context is the large window. With a small window, RAG or chunking becomes necessary. So our design depends on that capability - it's an honest trade-off, not a universal rule."</p></details>
+
+<details><summary><span class="q">Q.</span> You said a graph DB is overkill. What if you had to trace which of 10,000 contracts all reference the same master agreement?</summary>
+<p>"That's exactly where a graph database earns its place - relationships across many documents. Our scope is cross-references <i>within</i> one contract, which the LLM resolves in-context. Different problem, different tool; we'd reach for a graph DB only if the use case grew to that."</p></details>
+
+<details><summary><span class="q">Q.</span> Gemini can read PDFs directly. What if you sent the raw PDF straight to Gemini and skipped Docling?</summary>
+<p>"We could, but Docling gives us a <b>deterministic, structured representation</b> - markdown plus a section tree - that we store, display, and reuse across scoring, summary, and chat. It also decouples parsing from the model, so the pipeline doesn't depend on the LLM for structure. Sending raw PDF every time would be less predictable and more expensive."</p></details>
+
+<details><summary><span class="q">Q.</span> What if the uploaded PDF is a scanned image with no selectable text?</summary>
+<p>"Docling supports OCR for scanned documents, so it can still extract the text and layout. That was part of why we chose it over a plain text extractor that would return nothing on a scan."</p></details>
+
+<details><summary><span class="q">Q.</span> What if you used only Gemini for scoring - or only the rules? Why blend?</summary>
+<p>"Only rules would miss anything not matching a fixed pattern, and legal wording varies enormously. Only Gemini can be inconsistent between runs and gives no guarantee on obvious red flags like 'unlimited liability.' Blending 40% rules and 60% Gemini gives deterministic safety nets plus contextual judgement."</p></details>
+
+<details><summary><span class="q">Q.</span> Why 40/60? What if it were 50/50 or 30/70?</summary>
+<p>"It's a tuned weighting that leans on Gemini's semantic understanding while keeping the rules meaningful. It's a single configurable number, not a magic constant - if evaluation showed the rules were more reliable, we'd shift the weight. We favour the LLM because legal nuance dominates obvious-pattern matching."</p></details>
+
+<details><summary><span class="q">Q.</span> What if a contract has one critical clause buried among fifty harmless ones - doesn't the average hide it?</summary>
+<p>"We thought about that. The overall score isn't a plain average - it's <b>60% of the average plus 40% of the single highest clause score</b>. So one critical clause pulls the overall risk up and can't be drowned out by safe clauses."</p></details>
+
+<details><summary><span class="q">Q.</span> What if you'd used GPT-4o or Claude instead of Gemini?</summary>
+<p>"The architecture is model-agnostic - the LLM lives behind one service, so the model is essentially a config choice. We picked Gemini Flash for its large context window, structured-output support, low cost, and free tier. Another frontier model would work; it wouldn't change the pipeline."</p></details>
+
+<details><summary><span class="q">Q.</span> What if you needed semantic search over clauses later - doesn't that force you off PostgreSQL?</summary>
+<p>"No - PostgreSQL has a <code>pgvector</code> extension, so we can store embeddings and do vector search in the same database. We wouldn't need to switch databases to add semantic retrieval; that's another reason Postgres was a safe choice."</p></details>
+
+<details><summary><span class="q">Q.</span> What if the market standard differs by country or industry - your baselines are fixed?</summary>
+<p>"Baselines aren't hardcoded in logic - they live in a <code>Baseline</code> table in PostgreSQL, keyed by clause type, so they're configurable and could be extended per jurisdiction. The bigger future step is replacing curated baselines with RAG over a real benchmark corpus like CUAD."</p></details>
+
+<h2 id="s8">8. Plain-English glossary</h2>
+<table>
+<tr><th>Term</th><th>In one line</th></tr>
+<tr><td>Clause</td><td>A self-contained provision of a contract (e.g. the indemnity clause, the termination clause).</td></tr>
+<tr><td>Docling</td><td>IBM's open-source parser that turns a PDF/DOCX into structured text while keeping headings, tables, and section numbers.</td></tr>
+<tr><td>Gemini Flash</td><td>Google's fast, low-cost LLM with a large context window; we use it for extraction, scoring, summary, and chat.</td></tr>
+<tr><td>Structured output</td><td>Forcing the LLM to answer as JSON that matches a fixed schema, so results are predictable and storable.</td></tr>
+<tr><td>Clause extraction</td><td>Identifying and pulling out the named legal clauses from the parsed document.</td></tr>
+<tr><td>Market-standard baseline</td><td>A reference "normal" version of a clause; we compare the contract's clause against it to judge deviation.</td></tr>
+<tr><td>Market deviation</td><td>How far a clause differs from the baseline: favourable, unfavourable, unusual, or standard.</td></tr>
+<tr><td>Hybrid risk scoring</td><td>Combining deterministic regex rules with Gemini's judgement (40% / 60%) into one risk score.</td></tr>
+<tr><td>Risk level</td><td>The score bucketed into low (0-25), medium (26-50), high (51-75), or critical (76-100).</td></tr>
+<tr><td>Risk category</td><td>The kind of risk: financial, operational, legal, or reputational.</td></tr>
+<tr><td>Executive summary</td><td>A one-page plain-English overview: what the contract covers, who carries risk, top issues to negotiate.</td></tr>
+<tr><td>Long-context prompting</td><td>Sending the entire contract in one prompt instead of retrieving snippets - works because the context window is large.</td></tr>
+<tr><td>RAG</td><td>Retrieval-Augmented Generation: search a big corpus for relevant chunks, then feed them to the LLM. We don't use it (single contract), but it's our future plan.</td></tr>
+<tr><td>Vector database</td><td>A store for embeddings that enables semantic search; part of the future RAG roadmap.</td></tr>
+<tr><td>Background task</td><td>Work the backend runs after responding to the request, so the upload doesn't block or time out.</td></tr>
+<tr><td>FastAPI</td><td>The Python web framework serving our backend API.</td></tr>
+<tr><td>PostgreSQL</td><td>Our relational database holding the Contract, Clause, and Baseline tables.</td></tr>
+<tr><td>CUAD</td><td>A public benchmark dataset of annotated contracts - the corpus we'd use for future RAG-based market comparison.</td></tr>
+</table>
+
+<h2 id="s9">9. Live demo + if you get stuck</h2>
+<p>If asked to show it working, this runs the full stack locally (from the repo root):</p>
+<pre><code>docker compose up -d                                  # PostgreSQL
+cd backend &amp;&amp; .venv\Scripts\activate
+uvicorn app.main:app --reload --port 8000             # backend  -> localhost:8000/docs
+cd frontend &amp;&amp; npm run dev                             # frontend -> localhost:5173</code></pre>
+<div class="callout info">The three "wow" moments: upload a contract and watch the status move to <b>complete</b>; open a contract to show the <b>risk gauge + clause cards</b>; and the <b>compare</b> view showing the same clause across contracts.</div>
+
+<div class="callout warn"><b>Never bluff a wrong detail.</b> If you don't know an exact number, describe the idea. Examiners reward understanding over memorised specifics.</div>
+<ul>
+<li><b>Buy time:</b> "Let me walk through what happens step by step..." then narrate the flow from Section 4. It touches almost everything.</li>
+<li><b>Redirect to your strength:</b> almost any question can be grounded in the 5-stage pipeline - parse, extract, score, summarise, store - which is your area.</li>
+<li><b>Hand off cleanly:</b> if a question goes deep into a teammate's module, give the one-paragraph overview from Section 5, then "that part was owned by [name], who can go deeper."</li>
+<li><b>Own the simplifications:</b> "We deliberately kept it focused on a single-contract use case - that's why long-context instead of RAG - with a clear path to scale." That's a strength, not a weakness.</li>
+</ul>
+
+<hr>
+<p class="sub">LAI &middot; Legal Document Intelligence System &middot; FastAPI + React + PostgreSQL + Docling + Gemini Flash. You are Person 1: own Sections 0, 3, and 4, keep "parse, extract, score, summarise, store" on the tip of your tongue, and hand off with a smile.</p>
+
+</div>
+</body>
+</html>

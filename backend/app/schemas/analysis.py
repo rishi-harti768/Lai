@@ -76,8 +76,9 @@ class ChatRequest(BaseModel):
 
 class Citation(BaseModel):
     """Citation referencing a specific clause."""
-    clause_id: str
+    clause_id: str | None = None
     section_number: str | None = None
+    clause_type: str | None = None
     snippet: str
 
 
